@@ -1,0 +1,66 @@
+{
+  // Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "CI yaml template - GitHub Actions": {
+    "scope": "yaml,yml",
+    "prefix": "ci",
+    "body": [
+      "name: CI",
+      "on:",
+      "  push:",
+      "    branches:",
+      "      - main",
+      "    tags:",
+      "      - 'v[0-9]+.[0-9]+.[0-9]+'",
+      "  pull_request:",
+      "",
+      "concurrency:",
+      "  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}",
+      "  cancel-in-progress: true",
+      "",
+      "jobs:",
+      "  test:",
+      "    strategy:",
+      "      matrix:",
+      "        platform: [ubuntu-latest, macos-latest, windows-latest]",
+      "    runs-on: ${{ matrix.platform }}",
+      "",
+      "    steps:",
+      "      - uses: actions/checkout@v3",
+      "      - uses: actions/setup-node@v3",
+      "        with:",
+      "          node-version: '18'",
+      "      - run: npm install",
+      "      - run: npm run build",
+      "      - run: npm run test"
+    ]
+  },
+  "CI badge - GitHub Actions": {
+    "scope": "md, markdown",
+    "prefix": "cibg",
+    "body": [
+      "[![CI](https://github.com/tlylt/${1:repo}/actions/workflows/ci.yaml/badge.svg)](https://github.com/tlylt/${1:repo}/actions/workflows/ci.yaml)"
+    ]
+  },
+  "NPM badge": {
+    "scope": "md, markdown",
+    "prefix": "npmbg",
+    "body": [
+      "[![npm](https://img.shields.io/npm/v/@tlylt/${1:package})](https://www.npmjs.com/package/@tlylt/${1:package})"
+    ]
+  }
+}
